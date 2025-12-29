@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="700" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .box { fill: #ffffff; stroke: #111827; stroke-width: 2; rx: 18; }
+      .soft { fill: #F9FAFB; stroke: #111827; stroke-width: 2; rx: 18; }
+      .title { font: 700 22px Inter, system-ui, -apple-system, Segoe UI, Arial, sans-serif; fill: #111827; }
+      .h { font: 700 16px Inter, system-ui, -apple-system, Segoe UI, Arial, sans-serif; fill: #111827; }
+      .t { font: 500 14px Inter, system-ui, -apple-system, Segoe UI, Arial, sans-serif; fill: #111827; }
+      .muted { font: 500 12px Inter, system-ui, -apple-system, Segoe UI, Arial, sans-serif; fill: #374151; }
+      .arrow { stroke: #111827; stroke-width: 2.5; fill: none; marker-end: url(#mArrow); }
+      .darrow { stroke: #111827; stroke-width: 2.5; fill: none; stroke-dasharray: 6 6; marker-end: url(#mArrow); }
+      .dline { stroke: #111827; stroke-width: 2; fill: none; stroke-dasharray: 6 6; }
+      .pill { fill: #EEF2FF; stroke: #111827; stroke-width: 1.5; rx: 14; }
+      .pill2 { fill: #ECFEFF; stroke: #111827; stroke-width: 1.5; rx: 14; }
+      .pill3 { fill: #FDF2F8; stroke: #111827; stroke-width: 1.5; rx: 14; }
+    </style>
+    <marker id="mArrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#111827"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="700"/>
+
+  <!-- Header -->
+  <text class="title" x="60" y="58">EasyKey Wallet Architecture (RN + Native Boundary + Rust Core)</text>
+  <text class="muted" x="60" y="82">Goal: secrets stay out of JavaScript; JS orchestrates, native/Rust handle secrets via opaque handles and encrypted payloads.</text>
+
+  <!-- Main boxes -->
+  <rect class="box" x="60" y="120" width="320" height="220" rx="18"/>
+  <text class="h" x="90" y="156">React Native (JS/TS)</text>
+  <text class="t" x="90" y="186">• UI/UX + navigation</text>
+  <text class="t" x="90" y="208">• Orchestration (calls native)</text>
+  <text class="t" x="90" y="230">• Non-sensitive metadata/cache</text>
+  <text class="t" x="90" y="252">• Never needs plaintext secrets</text>
+
+  <rect class="box" x="440" y="120" width="320" height="220" rx="18"/>
+  <text class="h" x="470" y="156">@easykey/secure-crypto-native</text>
+  <text class="t" x="470" y="186">• Secure input views (no plaintext → JS)</text>
+  <text class="t" x="470" y="208">• MasterKey handles (mkHandle)</text>
+  <text class="t" x="470" y="230">• Biometrics (Keychain/Keystore)</text>
+  <text class="t" x="470" y="252">• Trusted confirm / reveal UX</text>
+
+  <rect class="box" x="820" y="120" width="320" height="220" rx="18"/>
+  <text class="h" x="850" y="156">Rust wallet_core</text>
+  <text class="t" x="850" y="186">• Derivation (BIP39/BIP44/SLIP-10)</text>
+  <text class="t" x="850" y="208">• Signing (EVM/BTC/TRON/SOL)</text>
+  <text class="t" x="850" y="230">• Vault + chat crypto helpers</text>
+  <text class="t" x="850" y="252">• SecretStore / SessionStore (in-memory)</text>
+
+  <!-- Arrows between main boxes -->
+  <path class="arrow" d="M380 230 L440 230"/>
+  <text class="muted" x="395" y="214">Bridge</text>
+
+  <path class="arrow" d="M760 230 L820 230"/>
+  <text class="muted" x="770" y="214">FFI</text>
+
+  <!-- Storage layer -->
+  <text class="h" x="60" y="400">Storage &amp; Secret Handling</text>
+
+  <rect class="soft" x="60" y="430" width="320" height="190" rx="18"/>
+  <text class="h" x="90" y="466">AsyncStorage (JS-accessible)</text>
+  <text class="t" x="90" y="496">• Wallet index (addresses, labels)</text>
+  <text class="t" x="90" y="518">• Feature flags / app state</text>
+  <text class="t" x="90" y="540">• Caches only (assume readable)</text>
+  <text class="t" x="90" y="562">• Must contain no secrets</text>
+
+  <rect class="soft" x="440" y="430" width="320" height="190" rx="18"/>
+  <text class="h" x="470" y="466">Keychain / Keystore (OS protected)</text>
+  <text class="t" x="470" y="496">• Encrypted per-chain payloads (ekws1:*)</text>
+  <text class="t" x="470" y="518">• Wallet password record (params + hash)</text>
+  <text class="t" x="470" y="540">• Biometric-wrapped master key blob</text>
+  <text class="t" x="470" y="562">• JS reads ciphertext only</text>
+
+  <rect class="soft" x="820" y="430" width="320" height="190" rx="18"/>
+  <text class="h" x="850" y="466">In-memory only (never persisted)</text>
+  <text class="t" x="850" y="496">• Native SecureDataStore: short-lived refs</text>
+  <text class="t" x="850" y="518">• Rust SecretStore: eksecret1:* refs</text>
+  <text class="t" x="850" y="540">• Rust SessionStore: eksession1:* refs</text>
+  <text class="t" x="850" y="562">• Cleared on restart / consumption</text>
+
+  <!-- Dotted association lines -->
+  <path class="dline" d="M220 340 L220 430"/>
+  <path class="dline" d="M600 340 L600 430"/>
+  <path class="dline" d="M980 340 L980 430"/>
+
+  <!-- Small callouts -->
+  <rect class="pill" x="88" y="302" width="220" height="30" rx="14"/>
+  <text class="muted" x="104" y="323">No plaintext mnemonic/private key</text>
+
+  <rect class="pill2" x="470" y="302" width="260" height="30" rx="14"/>
+  <text class="muted" x="486" y="323">JS holds mkHandle + ciphertext only</text>
+
+  <rect class="pill3" x="848" y="302" width="250" height="30" rx="14"/>
+  <text class="muted" x="864" y="323">Parsing/signing in Rust (trusted)</text>
+
+</svg>
